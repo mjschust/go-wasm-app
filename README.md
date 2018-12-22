@@ -1,3 +1,5 @@
+A simple app demonstrating a React component being fed data from a "long running" Go wasm task.
+
 To build run:
 
 $ make
