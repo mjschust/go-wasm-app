@@ -7,3 +7,5 @@ $ make
 To start the server:
 
 $ npm start 
+
+Created using create-react-app.
