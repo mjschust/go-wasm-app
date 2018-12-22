@@ -1,10 +1,14 @@
 A simple app demonstrating a React component being fed data from a "long running" Go wasm task.
 
-To build run:
+To run the app for the first time:
+
+go-wasm-app$ make && npm update && npm start
+
+To re-build Webassembly code:
 
 $ make
 
-To start the server:
+To re-start the server:
 
 $ npm start 
 
