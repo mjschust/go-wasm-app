@@ -15,6 +15,7 @@
 /src/wasm
 
 # misc
+CRA-README.md
 .DS_Store
 .env
 npm-debug.log*
