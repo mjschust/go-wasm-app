@@ -10,16 +10,6 @@ function postRank(wt, rank) {
 self.onmessage = function(wasmModule) {
     global.WebAssembly.instantiate(wasmModule.data, go.importObject).then(result => {
         go.run(result);
-        // global.goModules.testModule.computeSymmetricRank(
-        //     {
-        //         rank: 2,
-        //         level: 2,
-        //         numPoints: 4,
-        //         weight: [1, 1]
-        //     },
-        //     rank => postRank([1,1], rank)
-        // );
         global.goModules.testModule.computeRankData(postRank)
-        //global.goModules.testModule.benchmarkRank();
     });
 }

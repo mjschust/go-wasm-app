@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import './index.css';
-import main from './main.wasm';
+import wasm from './wasm/conformal-blocks.wasm';
 
 const worker = new Worker('GoWorker.js');
-fetch(main).then(response => {
+fetch(wasm).then(response => {
   return response.arrayBuffer();
 }).then(bytes => {
   return global.WebAssembly.compile(bytes);
@@ -15,12 +15,3 @@ fetch(main).then(response => {
     document.getElementById('root')
   );
 });
-   
-// global.WebAssembly.instantiateStreaming(fetch(main), go.importObject).then((result) => {
-//   go.run(result.instance);
-  
-//   ReactDOM.render(
-//     <App />,
-//     document.getElementById('root')
-//   );
-// });

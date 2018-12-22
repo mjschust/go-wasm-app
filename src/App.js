@@ -43,37 +43,6 @@ class App extends Component {
 
   componentDidMount() {
     this.props.worker.postMessage(this.props.wasmModule);
-    // global.goModules.testModule.computeSymmetricRank(
-    //   {
-    //     rank: 2,
-    //     level: 2,
-    //     numPoints: 4,
-    //     weight: [1, 1]
-    //   },
-    //   rank => this.setRank([1,1], rank)
-    // );
-    
-    // global.goModules.testModule.computeSymmetricRank(
-    //   {
-    //     rank: 2,
-    //     level: 2,
-    //     numPoints: 4,
-    //     weight: [0, 1]
-    //   },
-    //   rank => this.setRank([0,1], rank)
-    // );
-
-    // global.goModules.testModule.computeSymmetricRank(
-    //   {
-    //     rank: 2,
-    //     level: 2,
-    //     numPoints: 4,
-    //     weight: [2, 1]
-    //   },
-    //   rank => this.setRank([2,1], rank)
-    // );
-
-    //global.goModules.testModule.computeRankData(this.setRank);
   }
 
   render() {
