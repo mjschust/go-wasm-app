@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import './index.css';
 import wasm from './wasm/conformal-blocks.wasm';
 
 const worker = new Worker('GoWorker.js');

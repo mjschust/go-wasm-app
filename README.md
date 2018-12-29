@@ -2,7 +2,7 @@ A simple app demonstrating a React component being fed data from a "long running
 
 To run the app for the first time:
 
-go-wasm-app$ make && npm update && npm start
+go-wasm-app$ make && npm install && npm start
 
 To re-build Webassembly code:
 

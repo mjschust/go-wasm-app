@@ -1,17 +1,15 @@
+import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import React, { Component } from 'react';
-import './App.css';
-import DataTable from 'react-data-table-component';
+import BootstrapTable from 'react-bootstrap-table-next';
 
 const columns = [
   {
-    name: 'Weight',
-    selector: 'weight',
-    sortable: false
+    dataField: 'weight',
+    text: 'Weight',
   },
   {
-    name: 'Rank',
-    selector: 'rank',
-    sortable: true
+    dataField: 'rank',
+    text: 'Rank',
   },
 ];
 
@@ -48,10 +46,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <DataTable
-          noHeader
-          columns={columns}
+        <BootstrapTable
+          keyField='weight'
           data={this.state.rankData}
+          columns={columns}
         />
       </div>
     );
