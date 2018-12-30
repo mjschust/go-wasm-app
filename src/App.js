@@ -1,6 +1,8 @@
 import 'react-bootstrap-table-next/dist/react-bootstrap-table2.min.css';
 import React, { Component } from 'react';
+import { PageHeader, Button, ButtonToolbar } from 'react-bootstrap';
 import BootstrapTable from 'react-bootstrap-table-next';
+import createWorker from './create-worker';
 
 const columns = [
   {
@@ -10,6 +12,7 @@ const columns = [
   {
     dataField: 'rank',
     text: 'Rank',
+    sort: true
   },
 ];
 
@@ -21,14 +24,16 @@ class App extends Component {
       rankData: []
     };
 
-    this.setRank = this.setRank.bind(this);
-
-    props.worker.onmessage = event => {
-      this.setRank(event.data.wt, event.data.rank);
-    };
+    this.moduleLoaded = this.moduleLoaded.bind(this);
+    this.addRank = this.addRank.bind(this);
+    this.computeRanks = this.computeRanks.bind(this);
   }
 
-  setRank(wt, rank) {
+  moduleLoaded() {
+    // TODO: enable compute button(s) here
+  }
+
+  addRank({ wt, rank }) {
     this.setState(state => {
       let newRankData = state.rankData.slice();
       newRankData.push({weight: wt.toString(), rank: rank});
@@ -36,16 +41,37 @@ class App extends Component {
         rankData: newRankData
       };
     });
-    this.forceUpdate();
+  }
+
+  computeRanks() {
+    this.setState(state => {
+      return {
+        rankData: []
+      }
+    });
+    this.worker.postMessage({
+      queryMethod: 'computeRanks'
+    });
   }
 
   componentDidMount() {
-    this.props.worker.postMessage(this.props.wasmModule);
+    this.worker = createWorker({
+      moduleLoaded: this.moduleLoaded,
+      addRank: this.addRank
+    });
+  }
+
+  componentWillUnmount() {
+    this.worker.terminate();
   }
 
   render() {
     return (
       <div className="App">
+        <PageHeader>Conformal blocks in the browser</PageHeader>
+        <ButtonToolbar>
+          <Button onClick={this.computeRanks} bsStyle="primary" >Compute Ranks</Button>
+        </ButtonToolbar>
         <BootstrapTable
           keyField='weight'
           data={this.state.rankData}
