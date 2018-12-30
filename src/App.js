@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { PageHeader, Button, ButtonToolbar } from 'react-bootstrap';
 import BootstrapTable from 'react-bootstrap-table-next';
 import createWorker from './create-worker';
+import runWasm from './run-wasm';
 
 const columns = [
   {
@@ -27,6 +28,7 @@ class App extends Component {
     this.moduleLoaded = this.moduleLoaded.bind(this);
     this.addRank = this.addRank.bind(this);
     this.computeRanks = this.computeRanks.bind(this);
+    this.computeRanksSync = this.computeRanksSync.bind(this);
   }
 
   moduleLoaded() {
@@ -54,11 +56,23 @@ class App extends Component {
     });
   }
 
+  computeRanksSync() {
+    this.setState(state => {
+      return {
+        rankData: []
+      }
+    });
+    global.goModules.testModule.computeRankData((wt, rank) => {
+      this.addRank({wt, rank});
+    });
+  }
+
   componentDidMount() {
     this.worker = createWorker({
       moduleLoaded: this.moduleLoaded,
       addRank: this.addRank
     });
+    runWasm();
   }
 
   componentWillUnmount() {
@@ -71,6 +85,7 @@ class App extends Component {
         <PageHeader>Conformal blocks in the browser</PageHeader>
         <ButtonToolbar>
           <Button onClick={this.computeRanks} bsStyle="primary" >Compute Ranks</Button>
+          <Button onClick={this.computeRanksSync} bsStyle="primary" >Sync Compute Ranks</Button>
         </ButtonToolbar>
         <BootstrapTable
           keyField='weight'

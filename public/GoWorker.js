@@ -6,7 +6,7 @@ const queryFunctions = {
   loadModule({ wasmModule }) {
     global.WebAssembly.instantiate(wasmModule, go.importObject).then(result => {
       go.run(result);
-        postMessage({reponseMethod: 'moduleLoaded'});
+      postMessage({reponseMethod: 'moduleLoaded'});
       });
   },
   computeRanks() {

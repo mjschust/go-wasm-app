@@ -1,7 +1,7 @@
-install: build
+install: buildWasm
 	mkdir -p src/wasm && cp go_src/bin/* src/wasm
 
-build:
+buildWasm:
 	$(MAKE) -C go_src all
 
 clean:
