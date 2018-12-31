@@ -7,7 +7,7 @@
     "react-bootstrap": "^0.32.4",
     "react-bootstrap-table-next": "^2.0.0",
     "react-dom": "^16.7.0",
-    "react-scripts": "0.9.5"
+    "react-scripts": "^2.1.2"
   },
   "devDependencies": {},
   "scripts": {
@@ -15,5 +15,11 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }
