@@ -32,10 +32,16 @@ class RankTable extends Component {
     super(props)
 
     this.state = {
-      rankData: []
+      rankData: [],
+      rank: 1,
+      level: 1,
+      numPoints: undefined,
     };
 
     this.moduleLoaded = this.moduleLoaded.bind(this);
+    this.handleRankChange = this.handleRankChange.bind(this);
+    this.handleLevelChange = this.handleLevelChange.bind(this);
+    this.handlePointsChange = this.handlePointsChange.bind(this);
     this.addRank = this.addRank.bind(this);
     this.computeRanks = this.computeRanks.bind(this);
     this.computeRanksSync = this.computeRanksSync.bind(this);
@@ -43,6 +49,39 @@ class RankTable extends Component {
 
   moduleLoaded() {
     // TODO: enable compute button(s) here
+  }
+
+  handleRankChange(e) {
+    this.setState({ rank: parseInt(e.target.value, 10) })
+  }
+
+  handleLevelChange(e) {
+    this.setState({ level: parseInt(e.target.value, 10) })
+  }
+
+  handlePointsChange(e) {
+    this.setState({ numPoints: parseInt(e.target.value, 10) })
+  }
+
+  getPointsValidationState() {
+    if (!isNaN(this.state.numPoints) && this.state.numPoints >= 3) {
+      return null;
+    }
+    else if (this.state.numPoints === undefined) {
+      return null;
+    }
+    else {
+      return 'error';
+    }
+  }
+
+  isFormValid() {
+    if (!isNaN(this.state.numPoints) && this.state.numPoints >= 3) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   addRank({ wt, rank }) {
@@ -62,7 +101,12 @@ class RankTable extends Component {
       }
     });
     this.worker.postMessage({
-      queryMethod: 'computeRanks'
+      queryMethod: 'computeRanks',
+      queryArgs: {
+        rank: this.state.rank,
+        level: this.state.level,
+        numPoints: this.state.numPoints
+      }
     });
   }
 
@@ -72,9 +116,15 @@ class RankTable extends Component {
         rankData: []
       }
     });
-    global.goModules.testModule.computeRankData((wt, rank) => {
-      this.addRank({wt, rank});
-    });
+    global.goModules.testModule.computeRankData(
+      {
+        rank: this.state.rank,
+        level: this.state.level,
+        numPoints: this.state.numPoints
+      },
+      (wt, rank) => {
+        this.addRank({wt, rank});
+      });
   }
 
   componentDidMount() {
@@ -98,9 +148,9 @@ class RankTable extends Component {
               <Grid>
                 <Row>
                   <Col md={2}>
-                    <FormGroup controlId="formControlsSelect">
+                    <FormGroup controlId="rankSelect">
                       <ControlLabel>Lie group rank</ControlLabel>
-                      <FormControl componentClass="select" placeholder="select">
+                      <FormControl componentClass="select" onChange={this.handleRankChange}>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -111,9 +161,9 @@ class RankTable extends Component {
                     </FormGroup>
                   </Col>
                   <Col md={2}>
-                    <FormGroup controlId="formControlsSelect">
+                    <FormGroup controlId="levelSelect">
                       <ControlLabel>Level</ControlLabel>
-                      <FormControl componentClass="select" placeholder="select">
+                      <FormControl componentClass="select" onChange={this.handleLevelChange}>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -124,17 +174,33 @@ class RankTable extends Component {
                     </FormGroup>
                   </Col>
                   <Col md={2}>
-                    <FormGroup controlId="formControlsSelect">
-                      <ControlLabel>Number of weights</ControlLabel>
-                      <FormControl placeholder="10"/>
+                    <FormGroup 
+                      controlId="pointsInput" 
+                      validationState={this.getPointsValidationState()} 
+                    >
+                      <ControlLabel>Number of points</ControlLabel>
+                      <FormControl placeholder={"n \u2265 3"} onChange={this.handlePointsChange}/>
+                      <FormControl.Feedback />
                     </FormGroup>
                   </Col>
                 </Row>
                 <Row>
                   <Col md={4}>
                     <ButtonToolbar >
-                      <Button onClick={this.computeRanks} bsStyle='primary' >Compute Ranks</Button>
-                      <Button onClick={this.computeRanksSync} bsStyle='primary' >Sync Compute Ranks</Button>
+                      <Button 
+                        onClick={this.computeRanks} 
+                        disabled={!this.isFormValid()}
+                        bsStyle='primary' 
+                      >
+                        Compute Ranks
+                      </Button>
+                      <Button 
+                        onClick={this.computeRanksSync} 
+                        disabled={!this.isFormValid()}
+                        bsStyle='primary' 
+                      >
+                        Sync Compute Ranks
+                      </Button>
                     </ButtonToolbar>
                   </Col>
                 </Row>

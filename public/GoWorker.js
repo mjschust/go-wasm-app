@@ -9,11 +9,13 @@ const queryFunctions = {
       postMessage({reponseMethod: 'moduleLoaded'});
       });
   },
-  computeRanks() {
-    global.goModules.testModule.computeRankData((wt, rank) => {
+  computeRanks(args) {
+    global.goModules.testModule.computeRankData(
+      args, 
+      (wt, rank) => {
       const msg = {
         responseMethod: 'addRank',
-        responseArgs: { wt: Array.from(wt), rank }
+        responseArgs: { wt: Array.from(wt), rank: parseInt(rank) }
       };
       postMessage(msg);
     });

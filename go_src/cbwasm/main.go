@@ -2,10 +2,8 @@
 package main
 
 import (
-	"fmt"
 	"math/big"
 	"syscall/js"
-	"time"
 
 	"github.com/mjschust/cblocks/bundle"
 	"github.com/mjschust/cblocks/lie"
@@ -14,7 +12,6 @@ import (
 func main() {
 	goModules := js.Global().Get("goModules")
 	testModule := js.ValueOf(map[string]interface{}{})
-	testModule.Set("benchmarkRank", js.NewCallback(benchmarkSymmetricCBRank))
 	testModule.Set("computeSymmetricRank", js.NewCallback(computeSymmetricRank))
 	testModule.Set("computeRankData", js.NewCallback(computeRankData))
 	goModules.Set("testModule", testModule)
@@ -44,13 +41,14 @@ func computeSymmetricRank(args []js.Value) {
 }
 
 func computeRankData(args []js.Value) {
-	// TODO: make these parameters
-	rank := 3
-	level := 4
-	n := 10
+	// Extract args
+	bundleArgs := args[0]
+	rank := bundleArgs.Get("rank").Int()
+	level := bundleArgs.Get("level").Int()
+	n := bundleArgs.Get("numPoints").Int()
 
 	// Callback to store result
-	callback := args[0]
+	callback := args[1]
 
 	alg := lie.NewAlgebra(lie.NewTypeARootSystem(rank))
 	wts := alg.Weights(level)
@@ -65,27 +63,8 @@ func computeRankData(args []js.Value) {
 			for j, coord := range wt {
 				wt32[j] = int32(coord)
 			}
-			callback.Invoke(js.TypedArrayOf(wt32), js.ValueOf(rk.Int64()))
+			callback.Invoke(js.TypedArrayOf(wt32), js.ValueOf(rk.Text(10)))
 		}(wts[i])
 	}
 }
 
-func benchmarkSymmetricCBRank(args []js.Value) {
-	start := time.Now()
-	rank := 5
-	level := 4
-	n := 10
-	alg := lie.NewAlgebra(lie.NewTypeARootSystem(rank))
-	wts := alg.Weights(level)
-	for j := 0; j < len(wts); j++ {
-		bun := bundle.NewSymmetricCBBundle(alg, wts[j], level, n)
-		rk := bun.Rank()
-		if rk.Cmp(big.NewInt(0)) == 0 {
-			continue
-		}
-		fmt.Printf("%v: %v\n", wts[j], rk)
-	}
-	elasped := time.Since(start)
-
-	fmt.Printf("Rank test took %s seconds\n", elasped)
-}
