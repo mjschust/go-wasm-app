@@ -6,16 +6,15 @@ const queryFunctions = {
   loadModule({ wasmModule }) {
     global.WebAssembly.instantiate(wasmModule, go.importObject).then(result => {
       go.run(result);
-      postMessage({reponseMethod: 'moduleLoaded'});
       });
   },
   computeRanks(args) {
     global.goModules.testModule.computeRankData(
       args, 
-      (wt, rank) => {
+      (weight, rank) => {
       const msg = {
-        responseMethod: 'addRank',
-        responseArgs: { wt: Array.from(wt), rank: parseInt(rank) }
+        responseMethod: 'addData',
+        responseArgs: { weight: Array.from(weight), rank: parseInt(rank) }
       };
       postMessage(msg);
     });

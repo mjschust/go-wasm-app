@@ -3,16 +3,13 @@ import wasm from './wasm/conformal-blocks.wasm';
 /**
  * Creates a go worker with the given response handlers.
  */
-function createWorker({ moduleLoaded, addRank }) {
+function createWorker(addData) {
   const worker = new Worker('GoWorker.js');
   worker.onmessage = event => {
     const responseMethod = event.data.responseMethod;
     const responseArgs = event.data.responseArgs;
-    if (responseMethod === 'moduleLoaded') {
-      moduleLoaded();
-    }
-    else if (responseMethod === 'addRank') {
-      addRank(responseArgs);
+    if (responseMethod === 'addData') {
+      addData(responseArgs);
     }
   }
 

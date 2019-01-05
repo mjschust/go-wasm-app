@@ -13,6 +13,9 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import RankTable from './RankTable';
 
+/**
+ * Main app component.  Contains page layout and routing.
+ */
 function App() {
   return (
     <div className='App'>
