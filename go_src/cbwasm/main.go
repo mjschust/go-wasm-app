@@ -14,6 +14,7 @@ func main() {
 	testModule := js.ValueOf(map[string]interface{}{})
 	testModule.Set("computeSymmetricRank", js.NewCallback(computeSymmetricRank))
 	testModule.Set("computeRankData", js.NewCallback(computeRankData))
+	testModule.Set("computeDivisorData", js.NewCallback(computeDivisorData))
 	goModules.Set("testModule", testModule)
 	c := make(chan struct{})
 	<-c
@@ -64,6 +65,42 @@ func computeRankData(args []js.Value) {
 				wt32[j] = int32(coord)
 			}
 			callback.Invoke(js.TypedArrayOf(wt32), js.ValueOf(rk.Text(10)))
+		}(wts[i])
+	}
+}
+
+func computeDivisorData(args []js.Value) {
+	// Extract args
+	bundleArgs := args[0]
+	rank := bundleArgs.Get("rank").Int()
+	level := bundleArgs.Get("level").Int()
+	n := bundleArgs.Get("numPoints").Int()
+
+	// Callback to store result
+	callback := args[1]
+
+	alg := lie.NewAlgebra(lie.NewTypeARootSystem(rank))
+	wts := alg.Weights(level)
+	wt32 := make([]int32, rank)
+	for i := 0; i < len(wts); i++ {
+		go func(wt lie.Weight) {
+			// Compute data
+			bun := bundle.NewSymmetricCBBundle(alg, wt, level, n)
+			rk := bun.Rank()
+			if rk.Cmp(big.NewInt(0)) == 0 {
+				return
+			}
+			divisor := bun.SymmetrizedDivisor()
+
+			// Send data
+			for j, coord := range wt {
+				wt32[j] = int32(coord)
+			}
+			divArray := js.ValueOf([]interface{}{})
+			for _, coord := range divisor {
+				divArray.Call("push", coord.RatString())
+			}
+			callback.Invoke(js.TypedArrayOf(wt32), js.ValueOf(rk.Text(10)), divArray)
 		}(wts[i])
 	}
 }

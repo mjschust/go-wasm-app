@@ -18,6 +18,17 @@ const queryFunctions = {
       };
       postMessage(msg);
     });
+  },
+  computeDivisors(args) {
+    global.goModules.testModule.computeDivisorData(
+      args, 
+      (weight, rank, divisor) => {
+      const msg = {
+        responseMethod: 'addData',
+        responseArgs: { weight: Array.from(weight), rank: parseInt(rank), divisor }
+      };
+      postMessage(msg);
+    });
   }
 };
 

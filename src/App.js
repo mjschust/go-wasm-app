@@ -12,6 +12,7 @@ import {
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import RankTable from './RankTable';
+import DivisorTable from './DivisorTable';
 
 /**
  * Main app component.  Contains page layout and routing.
@@ -48,19 +49,19 @@ function App() {
             </div>
           </Col>
           <Col md={9}>
-            <Route exact path="/" render={() => (
+            <Route exact path='/' render={() => (
               <div>
                 <PageHeader>Conformal blocks ranks</PageHeader>
                 <RankTable/>
               </div>
             )}/>
-            <Route path="/divisors" render={() => (
+            <Route path='/divisors' render={() => (
               <div>
                 <PageHeader>Conformal blocks divisors</PageHeader>
-                <RankTable/>
+                <DivisorTable/>
               </div>
             )}/>
-            <Route path="/fcurves" render={() => (
+            <Route path='/fcurves' render={() => (
               <div>
                 <PageHeader>Intersections with F-curves</PageHeader>
                 TODO...

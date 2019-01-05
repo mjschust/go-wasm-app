@@ -13,21 +13,26 @@ const columns = [
     text: 'Rank',
     sort: true
   },
+  {
+    dataField: 'divisor',
+    text: 'Divisor',
+  },
 ];
 
 /**
  * This component computes the ranks of all bundles of a given lie rank, level, and number of
  * points, and displays the results as a table.
  */
-function RankTable() {
+function DivisorTable() {
   return (
-    <SymmetricBundleController computeMethod='computeRanks' render={data => (
+    <SymmetricBundleController computeMethod='computeDivisors' render={data => (
       <BootstrapTable
         keyField='weight'
         data={data.map(entry => (
           {
             weight: `[${entry.weight.toString()}]`, 
-            rank: entry.rank
+            rank: entry.rank,
+            divisor: `[${entry.divisor.toString()}]`
           }
         ))}
         columns={columns}
@@ -36,4 +41,4 @@ function RankTable() {
   );
 }
 
-export default RankTable;
+export default DivisorTable;
