@@ -9,6 +9,8 @@ import {
   Row,
   Col,
 } from 'react-bootstrap';
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import { LinkContainer } from "react-router-bootstrap";
 import RankTable from './RankTable';
 
 function App() {
@@ -24,23 +26,47 @@ function App() {
           <NavItem href="https://github.com/mjschust/go-wasm-app">GitHub</NavItem>
         </Nav>
       </Navbar>
+      <Router>
       <Grid>
         <Row>
           <Col md={3}>
             <div style={{paddingLeft: "20px", fontSize: "16.8px"}}>
               <Nav stacked bsSize="large">
-                <NavItem>Ranks</NavItem>
-                <NavItem>Divisors</NavItem>
-                <NavItem>F-curves</NavItem>
+                <LinkContainer to="/">
+                  <NavItem>Ranks</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/divisors">
+                  <NavItem>Divisors</NavItem>
+                </LinkContainer>
+                <LinkContainer to="/fcurves">
+                  <NavItem>F-curves</NavItem>
+                </LinkContainer>
               </Nav>
             </div>
           </Col>
           <Col md={9}>
-            <PageHeader>Conformal blocks ranks</PageHeader>
-            <RankTable/>
+            <Route exact path="/" render={() => (
+              <div>
+                <PageHeader>Conformal blocks ranks</PageHeader>
+                <RankTable/>
+              </div>
+            )}/>
+            <Route path="/divisors" render={() => (
+              <div>
+                <PageHeader>Conformal blocks divisors</PageHeader>
+                <RankTable/>
+              </div>
+            )}/>
+            <Route path="/fcurves" render={() => (
+              <div>
+                <PageHeader>Intersections with F-curves</PageHeader>
+                TODO...
+              </div>
+            )}/>
           </Col>
         </Row>
       </Grid>
+      </Router>
       
     </div>
   );
